@@ -5,11 +5,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.sql.Timestamp;
 
 @Entity
 @NoArgsConstructor
@@ -26,7 +29,14 @@ public class Complaint {
     private String body;
     private String category;
     private String instance;
+    private boolean negative;
     private double percent;
+
+    @CreationTimestamp
+    private Timestamp created_at;
+
+    @UpdateTimestamp
+    private Timestamp updated_at;
 
     public Complaint(ComplaintForm form) {
         this.topic = form.getTopic();
