@@ -6,6 +6,7 @@ import com.yudystriawan.complaintserver.models.request.ComplaintForm;
 import com.yudystriawan.complaintserver.prediction.Classification;
 import com.yudystriawan.complaintserver.repositories.ComplaintRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class ComplaintController {
     private ComplaintRepository complaintRepository;
 
     @GetMapping("/complaints")
+    @PreAuthorize("hasRole('USER')")
     public List<Complaint> all(){
         return complaintRepository.findAll();
     }
@@ -34,7 +36,6 @@ public class ComplaintController {
         //prediction
         String body = form.getBody();
         Classification classification = new Classification(body);
-
         complaint.setInstance(classification.getInstance());
         complaint.setPercent(classification.getPercent());
 
