@@ -47,4 +47,13 @@ public class User {
         this.username = username;
         this.password = password;
     }
+
+    public User(User user) {
+        this.id = user.getId();
+        this.role = user.getRole();
+        this.name = user.getName();
+        this.email = user.getEmail();
+        this.username = user.getUsername();
+        this.password = user.getPassword();
+    }
 }
