@@ -41,7 +41,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/oauth/token").permitAll()
+                .antMatchers("/oauth/**").permitAll()
+                .antMatchers("/complaint/all").permitAll()
                 .anyRequest().authenticated()
                 .antMatchers("/user").hasRole("USER")
                 .and()
