@@ -2,7 +2,6 @@ package com.yudystriawan.complaintserver.controllers;
 
 import com.yudystriawan.complaintserver.exceptions.ComplaintNotFoundException;
 import com.yudystriawan.complaintserver.models.Complaint;
-import com.yudystriawan.complaintserver.models.CustomUserDetails;
 import com.yudystriawan.complaintserver.models.User;
 import com.yudystriawan.complaintserver.models.request.ComplaintForm;
 import com.yudystriawan.complaintserver.prediction.Classification;
@@ -40,11 +39,11 @@ public class ComplaintController {
     @PostMapping("/create")
     @PreAuthorize("hasRole('USER')")
     public Complaint newComplaint(@RequestBody ComplaintForm form){
-
-        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        User user = userRepository.findByUsername(customUserDetails.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//
+//        CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//
+//        User user = userRepository.findByUsername(customUserDetails.getUsername())
+//                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         Complaint complaint = new Complaint(form);
 
@@ -53,7 +52,7 @@ public class ComplaintController {
         Classification classification = new Classification(body);
         complaint.setInstance(classification.getInstance());
         complaint.setPercent(classification.getPercent());
-        complaint.setUser(user);
+//        complaint.setUser(user);
 
         return complaintRepository.save(complaint);
 

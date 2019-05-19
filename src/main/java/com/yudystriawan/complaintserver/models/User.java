@@ -1,5 +1,6 @@
 package com.yudystriawan.complaintserver.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -19,7 +20,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+
     @ManyToOne
+    @JsonIgnore
     private Role role;
 
     private String name;
@@ -31,8 +34,10 @@ public class User {
     @Column(unique = true)
     private String username;
 
+    @JsonIgnore
     private String password;
 
+    @JsonIgnore
     private boolean enabled;
 
     @CreationTimestamp
