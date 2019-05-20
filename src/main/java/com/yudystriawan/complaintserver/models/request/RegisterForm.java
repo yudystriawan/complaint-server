@@ -22,8 +22,6 @@ public class RegisterForm {
     @Email
     private String email;
 
-    private Role role;
-
     @NotBlank
     @Size(min = 6, max = 40)
     private String password;

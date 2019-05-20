@@ -26,6 +26,9 @@ public class Comment {
     @ManyToOne
     private Complaint complaint;
 
+    @ManyToOne
+    private User user;
+
     @CreationTimestamp
     private Timestamp created_at;
 

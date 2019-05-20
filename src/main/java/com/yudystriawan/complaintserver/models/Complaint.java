@@ -26,7 +26,10 @@ public class Complaint {
     private String topic;
     private String body;
     private String category;
-    private String instance;
+
+    @ManyToOne
+    private Instance instance;
+
     private boolean negative;
     private double percent;
 
