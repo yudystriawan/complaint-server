@@ -1,5 +1,6 @@
 package com.yudystriawan.complaintserver.controllers;
 
+import com.yudystriawan.complaintserver.exceptions.UserNotFoundException;
 import com.yudystriawan.complaintserver.models.Role;
 import com.yudystriawan.complaintserver.models.RoleName;
 import com.yudystriawan.complaintserver.models.User;
@@ -9,14 +10,12 @@ import com.yudystriawan.complaintserver.repositories.RoleRepository;
 import com.yudystriawan.complaintserver.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -33,43 +32,45 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @PostMapping("/signin")
-    public ResponseEntity<?> login(@RequestBody LoginForm form) {
-        User user = userRepository.findByUsername(form.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("Account not found"));
+    @PostMapping
+    public ResponseEntity<?> login(@RequestBody User user) {
+        User getUser = userRepository.findByUsername(user.getUsername())
+                .orElseThrow(() -> new UserNotFoundException("Account not found"));
 
-        if (passwordEncoder.matches(form.getPassword(), user.getPassword())) {
-            return new ResponseEntity<>("login success", HttpStatus.OK);
+        if (passwordEncoder.matches(user.getPassword(), getUser.getPassword())) {
+            return ResponseEntity.ok().body(getUser);
         } else {
             return new ResponseEntity<>("Username or password not valid", HttpStatus.UNAUTHORIZED);
         }
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> register(@RequestBody RegisterForm form){
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody User user) {
 
-        if (userRepository.existsByEmail(form.getEmail())){
-            return new ResponseEntity<>("Email already exist", HttpStatus.BAD_REQUEST);
+        if (userRepository.existsByEmail(user.getEmail())) {
+            return ResponseEntity.badRequest().body("Email already exist");
         }
-        if (userRepository.existsByUsername(form.getUsername())){
-            return new ResponseEntity<>("Username already exist", HttpStatus.BAD_REQUEST);
+        if (userRepository.existsByUsername(user.getUsername())) {
+            return ResponseEntity.badRequest().body("Username already exist");
         }
 
-        User user = new User(
-                form.getName(),
-                form.getEmail(),
-                form.getUsername(),
-                passwordEncoder.encode(form.getPassword())
+        User newUser = new User(
+                user.getName(),
+                user.getEmail(),
+                user.getUsername(),
+                passwordEncoder.encode(user.getPassword())
         );
 
         Role role = roleRepository.findByName(RoleName.ROLE_USER)
                 .orElseThrow(() -> new RuntimeException("Role tidak ada"));
-        user.setRole(role);
-        user.setEnabled(true);
+        newUser.setRole(role);
+        newUser.setEnabled(true);
 
-        userRepository.save(user);
+        userRepository.save(newUser);
 
-        return new ResponseEntity<>("Registration success", HttpStatus.OK);
+        return ResponseEntity.ok("Registration success");
+
     }
+
 
 }

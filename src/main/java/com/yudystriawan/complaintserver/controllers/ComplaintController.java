@@ -15,12 +15,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/complaint")
+@RequestMapping("/complaints")
 public class ComplaintController {
 
     @Autowired
@@ -32,9 +33,24 @@ public class ComplaintController {
     @Autowired
     private InstanceRepository instanceRepository;
 
-    @GetMapping("/all")
+    @GetMapping
     public List<Complaint> all() {
         return complaintRepository.findAll();
+    }
+
+    @GetMapping(params = "instance")
+    public List<Complaint> byInstance(@RequestParam("instance") String instanceName) {
+        return complaintRepository.findByInstanceName(instanceName);
+    }
+
+    @GetMapping(params = "negative")
+    public List<Complaint> byNegative(@RequestParam("negative") boolean negative) {
+        return complaintRepository.findByNegative(negative);
+    }
+
+    @GetMapping(params = {"instance", "negative"})
+    public List<Complaint> byInstanceAndNegative(@RequestParam("instance") String instanceName, @RequestParam("negative") boolean negative) {
+        return complaintRepository.findByInstanceNameAndNegative(instanceName, negative);
     }
 
     @GetMapping("/{id}")
@@ -43,11 +59,15 @@ public class ComplaintController {
                 .orElseThrow(() -> new ComplaintNotFoundException(id));
     }
 
-    @PostMapping(value = "/create")
+
+    @PostMapping
     @PreAuthorize("hasRole('USER')")
-    public @ResponseBody String newComplaint(@RequestBody ComplaintForm form) {
+    public @ResponseBody
+    String newComplaint(@RequestBody ComplaintForm form) {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        User user = userRepository.findByUsername("user")
+//                .orElseThrow(() -> new UsernameNotFoundException("Account not found"));
 
         Complaint complaint = new Complaint(form);
 
@@ -68,9 +88,9 @@ public class ComplaintController {
 
     }
 
-    @PutMapping("/edit/{id}")
-    @PreAuthorize("hasRole('ADMIN_PRO')")
-    public ResponseEntity<?> edit(@RequestBody EditComplaintForm form, @PathVariable Integer id){
+    @PutMapping("/{id}")
+//    @PreAuthorize("hasRole('ADMIN_PRO')")
+    public ResponseEntity<?> edit(@RequestBody EditComplaintForm form, @PathVariable Integer id) {
 
         Complaint complaint = complaintRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pengaduan tidak ditemukan"));

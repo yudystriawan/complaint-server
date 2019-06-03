@@ -35,7 +35,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/complaint/all", "/auth/**", "/instance/**").permitAll()
+                .antMatchers(
+                        "/complaints",
+                        "/complaints/{id}",
+                        "/complaints/find",
+                        "/comments/{complaintId}",
+                        "/auth/register",
+                        "/instances"
+                ).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

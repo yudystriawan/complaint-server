@@ -1,4 +1,4 @@
-package com.yudystriawan.complaintserver.controllers;
+package com.yudystriawan.complaintserver.advices;
 
 import com.yudystriawan.complaintserver.exceptions.ComplaintNotFoundException;
 import org.springframework.http.HttpStatus;

@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/instance")
+@RequestMapping("/instances")
 public class InstanceController {
 
     @Autowired
     private InstanceRepository instanceRepository;
 
-    @GetMapping("/all")
+    @GetMapping()
     public List<Instance> all(){
         return instanceRepository.findAll();
     }
