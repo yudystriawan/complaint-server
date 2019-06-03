@@ -13,7 +13,7 @@ public class ComplaintNotFoundAdvice {
     @ResponseBody
     @ExceptionHandler(ComplaintNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String complaintNotFoundHandler(ComplaintNotFoundException e){
+    String complaintNotFoundHandler(ComplaintNotFoundException e) {
         return e.getMessage();
     }
 }

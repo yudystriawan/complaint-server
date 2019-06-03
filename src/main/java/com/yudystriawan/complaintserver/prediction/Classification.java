@@ -22,6 +22,27 @@ public class Classification {
     private String instance;
     private double percent;
 
+    public Classification(String text) {
+        Preprocessing p = new Preprocessing(text);
+        try {
+            Bagging bagging = (Bagging) SerializationHelper.read(modelPath);
+            testInstances = customInstances(p.getText(), "Dinas Lingkungan Hidup Dan Kebersihan Kota Denpasar");
+
+            if (testInstances.classIndex() == -1) {
+                testInstances.setClassIndex(testInstances.numAttributes() - 1);
+            }
+
+            double classValue = bagging.classifyInstance(testInstances.lastInstance());
+            instance = testInstances.classAttribute().value((int) classValue);
+
+            evaluation(p.getText(), instance);
+
+
+        } catch (Exception ex) {
+            Logger.getLogger(Classification.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     private Instances customInstances(String text, String prediction) {
         FastVector fastVector = new FastVector();
         fastVector.addElement("Dinas Lingkungan Hidup Dan Kebersihan Kota Denpasar");
@@ -46,28 +67,6 @@ public class Classification {
 
         return testing;
     }
-
-    public Classification(String text) {
-        Preprocessing p = new Preprocessing(text);
-        try {
-            Bagging bagging = (Bagging) SerializationHelper.read(modelPath);
-            testInstances = customInstances(p.getText(), "Dinas Lingkungan Hidup Dan Kebersihan Kota Denpasar");
-
-            if (testInstances.classIndex() == -1) {
-                testInstances.setClassIndex(testInstances.numAttributes() - 1);
-            }
-
-            double classValue = bagging.classifyInstance(testInstances.lastInstance());
-            instance = testInstances.classAttribute().value((int) classValue);
-
-            evaluation(p.getText(), instance);
-
-
-        } catch (Exception ex) {
-            Logger.getLogger(Classification.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
 
     private void evaluation(String text, String instance) {
 

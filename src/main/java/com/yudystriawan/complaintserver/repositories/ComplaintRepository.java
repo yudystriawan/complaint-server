@@ -10,6 +10,8 @@ import java.util.List;
 public interface ComplaintRepository extends JpaRepository<Complaint, Integer> {
 
     List<Complaint> findByInstanceNameAndNegative(String name, boolean negative);
+
     List<Complaint> findByInstanceName(String name);
+
     List<Complaint> findByNegative(boolean negative);
 }

@@ -17,7 +17,7 @@ public class InstanceController {
     private InstanceRepository instanceRepository;
 
     @GetMapping()
-    public List<Instance> all(){
+    public List<Instance> all() {
         return instanceRepository.findAll();
     }
 

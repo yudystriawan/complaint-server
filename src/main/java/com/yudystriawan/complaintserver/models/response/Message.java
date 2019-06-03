@@ -1,6 +1,8 @@
 package com.yudystriawan.complaintserver.models.response;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @ToString

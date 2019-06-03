@@ -18,6 +18,10 @@ public class Preprocessing {
 
     private String text;
 
+    public Preprocessing(String text) {
+        this.text = text;
+    }
+
     public String getText() {
         List<String> words = stemming();
         text = null;
@@ -29,10 +33,6 @@ public class Preprocessing {
             }
         }
         return text;
-    }
-
-    public Preprocessing(String text) {
-        this.text = text;
     }
 
     private List<String> casefoldingTokenizing() {
