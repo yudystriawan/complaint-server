@@ -3,7 +3,6 @@ package com.yudystriawan.complaintserver.controllers;
 import com.yudystriawan.complaintserver.models.Comment;
 import com.yudystriawan.complaintserver.models.Complaint;
 import com.yudystriawan.complaintserver.models.User;
-import com.yudystriawan.complaintserver.models.request.CommentForm;
 import com.yudystriawan.complaintserver.repositories.CommentRepository;
 import com.yudystriawan.complaintserver.repositories.ComplaintRepository;
 import com.yudystriawan.complaintserver.repositories.UserRepository;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,18 +42,18 @@ public class CommentController {
     //    createcomment
     @PostMapping("/{complaintId}")
     @PreAuthorize("hasRole('ADMIN_INST')")
-    public ResponseEntity<?> create(@RequestBody CommentForm form, @PathVariable Integer complaintId) {
+    public ResponseEntity<?> create(@RequestBody Comment comment, @PathVariable Integer complaintId) {
         Complaint complaint = complaintRepository.findById(complaintId)
                 .orElseThrow(() -> new RuntimeException("Pengaduan tidak ditemukan"));
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        Comment comment = new Comment();
-        comment.setBody(form.getBody());
-        comment.setUser(user);
-        comment.setComplaint(complaint);
+        Comment newComment = new Comment();
+        newComment.setBody(comment.getBody());
+        newComment.setUser(user);
+        newComment.setComplaint(complaint);
 
-        commentRepository.save(comment);
+        commentRepository.save(newComment);
 
         return new ResponseEntity<>("Tindak lanjut berhasil dikirim", HttpStatus.OK);
     }

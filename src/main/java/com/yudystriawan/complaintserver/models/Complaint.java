@@ -1,6 +1,5 @@
 package com.yudystriawan.complaintserver.models;
 
-import com.yudystriawan.complaintserver.models.request.ComplaintForm;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -45,9 +44,47 @@ public class Complaint {
     @UpdateTimestamp
     private Timestamp updated_at;
 
-    public Complaint(ComplaintForm form) {
-        this.topic = form.getTopic();
-        this.body = form.getBody();
-        this.category = form.getCategory();
+    public Integer getId() {
+        return id;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public Instance getInstance() {
+        return instance;
+    }
+
+    public boolean isNegative() {
+        return negative;
+    }
+
+    public double getPercent() {
+        return percent;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public Timestamp getCreated_at() {
+        return created_at;
+    }
+
+    public Timestamp getUpdated_at() {
+        return updated_at;
     }
 }

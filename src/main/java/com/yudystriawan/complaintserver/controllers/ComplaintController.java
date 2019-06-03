@@ -4,8 +4,6 @@ import com.yudystriawan.complaintserver.exceptions.ComplaintNotFoundException;
 import com.yudystriawan.complaintserver.models.Complaint;
 import com.yudystriawan.complaintserver.models.Instance;
 import com.yudystriawan.complaintserver.models.User;
-import com.yudystriawan.complaintserver.models.request.ComplaintForm;
-import com.yudystriawan.complaintserver.models.request.EditComplaintForm;
 import com.yudystriawan.complaintserver.prediction.Classification;
 import com.yudystriawan.complaintserver.repositories.ComplaintRepository;
 import com.yudystriawan.complaintserver.repositories.InstanceRepository;
@@ -15,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -63,16 +60,14 @@ public class ComplaintController {
     @PostMapping
     @PreAuthorize("hasRole('USER')")
     public @ResponseBody
-    String newComplaint(@RequestBody ComplaintForm form) {
+    String newComplaint(@RequestBody Complaint complaint) {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 //        User user = userRepository.findByUsername("user")
 //                .orElseThrow(() -> new UsernameNotFoundException("Account not found"));
 
-        Complaint complaint = new Complaint(form);
-
         //prediction
-        String body = form.getBody();
+        String body = complaint.getBody();
         Classification classification = new Classification(body);
         String pred_instance = classification.getInstance();
 
@@ -89,19 +84,19 @@ public class ComplaintController {
     }
 
     @PutMapping("/{id}")
-//    @PreAuthorize("hasRole('ADMIN_PRO')")
-    public ResponseEntity<?> edit(@RequestBody EditComplaintForm form, @PathVariable Integer id) {
+//    @PreAuthorize("hasRole('ADMIN_APP')")
+    public ResponseEntity<?> edit(@RequestBody Complaint complaint, @PathVariable Integer id) {
 
-        Complaint complaint = complaintRepository.findById(id)
+        Complaint getComplaint = complaintRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pengaduan tidak ditemukan"));
 
-        Instance instance = instanceRepository.findByName(form.getInstance())
+        Instance instance = instanceRepository.findByName(complaint.getInstance().getName())
                 .orElseThrow(() -> new RuntimeException("Nama Instansi tidak ditemukan"));
 
-        complaint.setInstance(instance);
-        complaint.setNegative(form.isNegative());
+        getComplaint.setInstance(instance);
+        getComplaint.setNegative(complaint.isNegative());
 
-        complaintRepository.save(complaint);
+        complaintRepository.save(getComplaint);
 
         return new ResponseEntity<>("Pengaduan berhasil diubah", HttpStatus.OK);
 

@@ -4,20 +4,13 @@ import com.yudystriawan.complaintserver.exceptions.UserNotFoundException;
 import com.yudystriawan.complaintserver.models.Role;
 import com.yudystriawan.complaintserver.models.RoleName;
 import com.yudystriawan.complaintserver.models.User;
-import com.yudystriawan.complaintserver.models.request.LoginForm;
-import com.yudystriawan.complaintserver.models.request.RegisterForm;
 import com.yudystriawan.complaintserver.repositories.RoleRepository;
 import com.yudystriawan.complaintserver.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
