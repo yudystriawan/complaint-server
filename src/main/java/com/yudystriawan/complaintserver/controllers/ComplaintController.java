@@ -9,6 +9,7 @@ import com.yudystriawan.complaintserver.repositories.ComplaintRepository;
 import com.yudystriawan.complaintserver.repositories.InstanceRepository;
 import com.yudystriawan.complaintserver.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,9 +31,13 @@ public class ComplaintController {
     @Autowired
     private InstanceRepository instanceRepository;
 
+//    @GetMapping
+//    public List<Complaint> all() {
+//        return complaintRepository.findAll();
+//    }
     @GetMapping
     public List<Complaint> all() {
-        return complaintRepository.findAll();
+        return complaintRepository.findAll(new Sort(Sort.Direction.DESC, "id"));
     }
 
     @GetMapping(params = "instance")
